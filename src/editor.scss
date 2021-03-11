@@ -1,0 +1,39 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-create-block-repeater-block {
+	border: 1px dotted #f00;
+}
+.block-element-add{
+	margin-left: 5px;
+	background-color: crimson;
+	color: wheat;
+}
+.block-element-add:hover{
+	color: wheat;
+}
+
+.inner_image{
+	width: 40%;
+}
+.block-element-listing {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+}
+.editor-styles-wrapper .block-element {
+    display: flex;
+    flex-wrap: wrap;
+}
+.editor-styles-wrapper .block-element {
+    padding: 0 10px;
+    max-width: 50%;
+    flex: 0 0 50%;
+    margin-bottom: 30px;
+}
+.delete-element-block{
+    margin-left: 0px!important;
+}
