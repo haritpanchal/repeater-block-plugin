@@ -95,11 +95,16 @@ registerBlockType( 'create-block/repeater-block', {
 					source: 'html',
 					selector: '.block_inner--subtitle'
 				},
-				in_rep_checkbox : {
-					source : 'attribute',
-					attribute: 'data-val',
-					selector: 'input.in_rep_checkbox_ctrl'
+				external_link : {
+					type : 'string',
+					source : 'html',
+					selector : '.inner_external_link'
 				},
+				// in_rep_checkbox : {
+				// 	source : 'attribute',
+				// 	attribute: 'data-val',
+				// 	selector: 'input.in_rep_checkbox_ctrl'
+				// },
 				src: {attribute: 'src', source: 'attribute', selector: 'img'},
 				id: {attribute: 'data-id', source: 'attribute', selector: 'img'},
 				alt: {attribute: 'alt', source: 'attribute', selector: 'img'},
@@ -109,6 +114,26 @@ registerBlockType( 'create-block/repeater-block', {
 			source : 'attribute',
 			attribute: 'data-val',
 			selector: 'input.inner_checkbox_ctrl'
+		},
+		show:{
+			source : 'attribute',
+			attribute : 'data-toggle',
+			selector : 'input.inner_toggle_ctrl'
+		},
+		option: {
+			source : 'attribute',
+			attribute : 'data-radio',
+			selector : 'input.inner_radio_ctrl',
+			default : 'a',
+		},
+		column_count: {
+			type:'number',
+			default : 1,
+			selector : 'input.column_count'
+		},
+		font_color : {
+			type : 'string',
+			default : '#333',
 		},
 	},
 

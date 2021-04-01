@@ -13,3 +13,27 @@
 .rep-block{
 	max-width: 80%!important;
 }
+.column_struct{
+	padding: 5%;
+	background-color: darksalmon;
+	display: flex;
+	flex-wrap: wrap;
+}
+.block_item{
+	padding: 0 20px;
+}
+.col-1 .block_item{
+	width: 100%;
+}
+.col-2 .block_item{
+	width: 50%;
+}
+.col-3 .block_item{
+	width: 33.33%;
+}
+.col-4 .block_item{
+	width: 25%;
+}
+.next{
+	border: 1px solid red;
+}

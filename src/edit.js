@@ -11,9 +11,33 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/packages/packages-block-editor/#useBlockProps
  */
-import { RichText, MediaUpload } from '@wordpress/block-editor';
-import { Button, IconButton, CheckboxControl  } from '@wordpress/components';
+import { RichText, MediaUpload, InspectorControls } from '@wordpress/block-editor';
+import { 
+        IconButton, 
+        CheckboxControl, 
+        FormToggle, 
+        DropdownMenu, 
+        PanelBody, 
+        PanelRow, 
+        RadioControl, 
+        RangeControl, 
+        ColorPalette, 
+        ColorPicker,    
+        ExternalLink,
+        Flex, 
+        FlexItem, 
+        FlexBlock,
+        Icon
+} from '@wordpress/components';
+
 import { useState } from '@wordpress/element';
+import {
+    more,
+    arrowLeft,
+    arrowRight,
+    arrowUp,
+    arrowDown,
+} from '@wordpress/icons';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -33,7 +57,6 @@ import './editor.scss';
 export default function Edit(props) {
 	let attributes = props.attributes;
     let blockquote = attributes.blockquote;
-
     function _toConsumableArray(arr) {
         if (Array.isArray(arr)) {
             for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
@@ -44,13 +67,10 @@ export default function Edit(props) {
             return Array.from(arr);
         }
     }
-    
+
     let blockquoteList = blockquote.sort(function (a, b) {
         return a.index - b.index;
     }).map(function (item) {
-        let [ isChecked, setChecked ] = useState( false );
-        let new_val = 0
-        item.in_rep_checkbox == 1 ? [ isChecked, setChecked ] = useState(true) : [ isChecked, setChecked ] = useState( false );
         return [
             <div className='block-element'>
                 <div className='block-element-head'>
@@ -117,6 +137,7 @@ export default function Edit(props) {
                         tagName = 'p'
                         placeholder = 'Enter Title'
                         value = { item.inner_title }
+                        style = {{color: attributes.font_color}}
                         onChange = {(inner_title)=>{
                             let newObject = Object.assign({}, item, {
                                 inner_title: inner_title
@@ -132,6 +153,7 @@ export default function Edit(props) {
                         tagName = 'p'
                         placeholder = 'Enter Subtitle'
                         value = { item.inner_subtitle }
+                        style = {{color: attributes.font_color}}
                         onChange = {(inner_subtitle)=>{
                             let newObject = Object.assign({}, item, {
                                 inner_subtitle: inner_subtitle
@@ -143,24 +165,7 @@ export default function Edit(props) {
                             });
                         }}
                     />
-                    <CheckboxControl
-                        className= 'checkbox-in-block'
-                        checked={ isChecked }
-                        onClick={() => {
-                            item.in_rep_checkbox ==1 ? new_val=0 : new_val=1;
-                            let newObject = Object.assign({}, item, {
-                                in_rep_checkbox: new_val
-                            });
-                            props.setAttributes({
-                                blockquote: [].concat(_toConsumableArray(blockquote.filter(function (element) {
-                                    return element.index != item.index;
-                                })), [newObject])
-                            });
-                            
-                            // props.setAttributes({in_rep_checkbox:new_val})
-                        }}
-                        onChange={setChecked}
-                    />
+                    
                 </div>
             </div>
         ];
@@ -168,19 +173,98 @@ export default function Edit(props) {
     let [ isChecked, setChecked ] = useState( false );
     let new_val = 0;
     attributes.inner_checkbox_ctrl == 1 ? [ isChecked, setChecked ] = useState(true) : [ isChecked, setChecked ] = useState( false );
-    return[
+    const { show, option } = attributes;
+    return(
+    <>
+        <InspectorControls>
+                <PanelBody title='Extra class' initialOpen={true}>
+                    <PanelRow>
+                    Add another extra class?
+                    <FormToggle
+                        help={show ? 1 : 0}
+                        checked={show}
+                        onChange={() => props.setAttributes({ show: !show })}
+                    />
+                    </PanelRow>
+                    <PanelRow>
+                        Radiobox
+                        <RadioControl
+                            selected={ option }
+                            options={ [
+                                { label: 'Author', value: 'a' },
+                                { label: 'Editor', value: 'b' },
+                                { label: 'Viewer', value: 'c' },
+                            ] }
+                            onChange={ (option) => props.setAttributes({ option: option } ) }
+                        />
+                    </PanelRow>
+                </PanelBody>
+                <PanelBody>
+                    <PanelRow>
+                        <div>
+                            <CheckboxControl
+                                heading="Column Structure?"
+                                className= 'checkbox-block'
+                                checked={ isChecked }
+                                onClick={() => {
+                                    attributes.inner_checkbox_ctrl ==1 ? new_val=0 : new_val=1;
+                                    props.setAttributes({inner_checkbox_ctrl:new_val})
+                                }}
+                                onChange={setChecked}
+                            />
+                        </div>
+                    </PanelRow>
+                    <RangeControl 
+                        value= { attributes.column_count }
+                        onChange = { (column_count) => props.setAttributes( { column_count } ) }
+                        min = { 1 }
+                        max = { 4 }
+                        step = { 1 }
+                        />
+                </PanelBody>
+                <PanelBody title="Dropdown">
+                    <DropdownMenu
+                        icon={ more }
+                        label="Select a direction"
+                        controls={ [
+                            {
+                                title: 'Up',
+                                icon: arrowUp,
+                                onClick: () => console.log( 'up' ),
+                            },
+                            {
+                                title: 'Right',
+                                icon: arrowRight,
+                                onClick: () => console.log( 'right' ),
+                            },
+                            {
+                                title: 'Down',
+                                icon: arrowDown,
+                                onClick: () => console.log( 'down' ),
+                            },
+                            {
+                                title: 'Left',
+                                icon: arrowLeft,
+                                onClick: () => console.log( 'left' ),
+                            },
+                        ] }
+                    />
+                </PanelBody>
+                <PanelBody title="Color Settings">
+                    {/* <ColorPalette
+                        value = {props.font_color}
+                        onChange = { (font_color) => props.setAttributes({font_color}) }
+                    /> */}
+                    <ColorPicker
+                        value = {attributes.font_color}
+                        onChangeComplete = { (font_color) => props.setAttributes({font_color:font_color.hex}) }
+                    />
+                    {/* <ExternalLink href="https://wordpress.org">WordPress.org</ExternalLink> */}
+                </PanelBody>
+        </InspectorControls>
+
+
         <div className="block-element-list">
-            <div>
-                <CheckboxControl
-                    className= 'checkbox-block'
-                    checked={ isChecked }
-                    onClick={() => {
-                        attributes.inner_checkbox_ctrl ==1 ? new_val=0 : new_val=1;
-                        props.setAttributes({inner_checkbox_ctrl:new_val})
-                    }}
-                    onChange={setChecked}
-                />
-            </div>
             <div className='block-element-listing'>
              {blockquoteList}
              </div>
@@ -199,5 +283,6 @@ export default function Edit(props) {
                  </IconButton>
              </div>
         </div>
-    ] 
+    </>
+    )
 }

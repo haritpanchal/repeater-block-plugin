@@ -25,7 +25,6 @@ import { RichText, useBlockProps } from '@wordpress/block-editor';
 export default function save(props) {
     let attributes = props.attributes;
     let blockquote = attributes.blockquote;
-
     let blockquoteList = blockquote.map(function (item) {
             return <div className='block_item'>
                 <RichText.Content
@@ -39,20 +38,35 @@ export default function save(props) {
                     tagName = 'h2'
                     className="block_inner--title"
                     value = {item.inner_title}
+                    style = {{color:attributes.font_color}}
                 />
                 <RichText.Content 
                     tagName = 'p'
                     className="block_inner--subtitle"
                     value = {item.inner_subtitle}
+                    style = {{color:attributes.font_color}}
                 />
-               <input type='hidden' className='in_rep_checkbox_ctrl' data-val={item.in_rep_checkbox} value='here' />
             </div> 
         });
-
+    
+    let next = '';
+    let new_class = '';
+    const { show, inner_checkbox_ctrl, option, column_count } = attributes;
+    if(inner_checkbox_ctrl == 1){
+        new_class = 'column_struct ' ;
+    }
+    if(show){
+        next = ' next';
+    }
     return <section className='rep-block' data-length={blockquote.length}>
-        <div className="container">
-            {blockquoteList}
-            <input type='hidden' className='inner_checkbox_ctrl' data-val={attributes.inner_checkbox_ctrl} value='here' />
+        <div className="container" >
+            <div className={new_class + 'col-' + column_count}>
+                {blockquoteList}
+                <input type='hidden' className='inner_checkbox_ctrl' data-val={inner_checkbox_ctrl} value='here' />
+                <input type='hidden' className='inner_toggle_ctrl' data-toggle={show} value='here' />
+                <input type='hidden' className='inner_radio_ctrl' data-radio={option} value='here' />
+                <input type='hidden' className='column_count' value= {column_count} />
+            </div>
         </div>
     </section>
 }
