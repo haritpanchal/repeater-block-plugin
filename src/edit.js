@@ -4,7 +4,8 @@
  * @see https://developer.wordpress.org/block-editor/packages/packages-i18n/
  */
 import { __ } from '@wordpress/i18n';
-
+import axios from 'axios';
+import apiFetch from '@wordpress/api-fetch';
 /**
  * React hook that is used to mark the block wrapper element.
  * It provides all the necessary props like the class name.
@@ -27,7 +28,9 @@ import {
         Flex, 
         FlexItem, 
         FlexBlock,
-        Icon
+        Icon,
+        FontSizePicker,
+        TextControl,
 } from '@wordpress/components';
 
 import { useState } from '@wordpress/element';
@@ -67,7 +70,30 @@ export default function Edit(props) {
             return Array.from(arr);
         }
     }
+    const fontSizes = [
+        {
+            name: __( 'Small' ),
+            slug: 'small',
+            size: 12,
+        },
+        {
+            name: __( 'Big' ),
+            slug: 'big',
+            size: 26,
+        },
+        {
+            name: __( 'Very Big' ),
+            slug: 'very-big',
+            size: 40,
+        }
+    ];
 
+    const fallbackFontSize = 48;
+    apiFetch( { path: '/wp/v2/posts' } ).then( posts => {
+        props.setAttributes( {posts_array : posts})
+    } );
+
+    console.log(attributes.posts_array);
     let blockquoteList = blockquote.sort(function (a, b) {
         return a.index - b.index;
     }).map(function (item) {
@@ -137,7 +163,7 @@ export default function Edit(props) {
                         tagName = 'p'
                         placeholder = 'Enter Title'
                         value = { item.inner_title }
-                        style = {{color: attributes.font_color}}
+                        style = {{color: attributes.font_color, fontSize: attributes.font_size_title}}
                         onChange = {(inner_title)=>{
                             let newObject = Object.assign({}, item, {
                                 inner_title: inner_title
@@ -153,7 +179,7 @@ export default function Edit(props) {
                         tagName = 'p'
                         placeholder = 'Enter Subtitle'
                         value = { item.inner_subtitle }
-                        style = {{color: attributes.font_color}}
+                        style = {{color: attributes.font_color, fontSize: attributes.font_size_sub_title, lineHeight:attributes.line_height}}
                         onChange = {(inner_subtitle)=>{
                             let newObject = Object.assign({}, item, {
                                 inner_subtitle: inner_subtitle
@@ -199,7 +225,7 @@ export default function Edit(props) {
                         />
                     </PanelRow>
                 </PanelBody>
-                <PanelBody>
+                <PanelBody title='Column Settings' initialOpen={false}>
                     <PanelRow>
                         <div>
                             <CheckboxControl
@@ -222,8 +248,8 @@ export default function Edit(props) {
                         step = { 1 }
                         />
                 </PanelBody>
-                <PanelBody title="Dropdown">
-                    <DropdownMenu
+                {/* <PanelBody title="Dropdown"> */}
+                    {/* <DropdownMenu
                         icon={ more }
                         label="Select a direction"
                         controls={ [
@@ -248,9 +274,9 @@ export default function Edit(props) {
                                 onClick: () => console.log( 'left' ),
                             },
                         ] }
-                    />
-                </PanelBody>
-                <PanelBody title="Color Settings">
+                    /> */}
+                {/* </PanelBody> */}
+                <PanelBody title="Color Settings" initialOpen={false}>
                     {/* <ColorPalette
                         value = {props.font_color}
                         onChange = { (font_color) => props.setAttributes({font_color}) }
@@ -260,6 +286,33 @@ export default function Edit(props) {
                         onChangeComplete = { (font_color) => props.setAttributes({font_color:font_color.hex}) }
                     />
                     {/* <ExternalLink href="https://wordpress.org">WordPress.org</ExternalLink> */}
+                </PanelBody>
+                <PanelBody title="Font Size Settings" initialOpen={false}>
+                    <p><strong>Title Font Size</strong></p>
+                    <FontSizePicker 
+                        fontSizes = { fontSizes }
+                        value = {attributes.font_size_title}
+                        onChange = { (font_size_title) => props.setAttributes( {font_size_title: font_size_title}) }
+                    />
+                    <p><strong>Subtitle Font Size</strong></p>
+                    <FontSizePicker 
+                        fontSizes = { fontSizes }
+                        fallbackFontSize = { fallbackFontSize }
+                        value = {attributes.font_size_sub_title}
+                        onChange = { (font_size_sub_title) => props.setAttributes( {font_size_sub_title: font_size_sub_title}) }
+                    />
+                    <TextControl
+                        type  = "number"
+                        min = {0}
+                        step = {0.1}
+                        width = {10}
+                        placeholder = {attributes.line_height}
+                        value = {attributes.line_height}
+                        onChange = { (line_height) => props.setAttributes( {line_height: line_height}) }
+                    />
+                </PanelBody>
+                <PanelBody>
+                   
                 </PanelBody>
         </InspectorControls>
 

@@ -135,6 +135,20 @@ registerBlockType( 'create-block/repeater-block', {
 			type : 'string',
 			default : '#333',
 		},
+		font_size_title : {
+			type : 'number',
+		},
+		font_size_sub_title : {
+			type : 'number',
+		},
+		line_height : {
+			type : 'number',
+			default : 1.0
+		},
+		posts_array : {
+			type : 'array',
+			source: 'query',
+		}
 	},
 
 	/**
@@ -146,4 +160,7 @@ registerBlockType( 'create-block/repeater-block', {
 	 * @see ./save.js
 	 */
 	save,
+	example: () => {
+	},
+
 } );

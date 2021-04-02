@@ -38,13 +38,13 @@ export default function save(props) {
                     tagName = 'h2'
                     className="block_inner--title"
                     value = {item.inner_title}
-                    style = {{color:attributes.font_color}}
+                    style = {{color:attributes.font_color, fontSize: attributes.font_size_title}}
                 />
                 <RichText.Content 
                     tagName = 'p'
                     className="block_inner--subtitle"
                     value = {item.inner_subtitle}
-                    style = {{color:attributes.font_color}}
+                    style = {{color:attributes.font_color, fontSize: attributes.font_size_sub_title, lineHeight:attributes.line_height}}
                 />
             </div> 
         });
