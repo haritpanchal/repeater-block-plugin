@@ -4,43 +4,14 @@
  * @see https://developer.wordpress.org/block-editor/packages/packages-i18n/
  */
 import { __ } from '@wordpress/i18n';
-import axios from 'axios';
-import apiFetch from '@wordpress/api-fetch';
+
 /**
  * React hook that is used to mark the block wrapper element.
  * It provides all the necessary props like the class name.
  *
  * @see https://developer.wordpress.org/block-editor/packages/packages-block-editor/#useBlockProps
  */
-import { RichText, MediaUpload, InspectorControls } from '@wordpress/block-editor';
-import { 
-        IconButton, 
-        CheckboxControl, 
-        FormToggle, 
-        DropdownMenu, 
-        PanelBody, 
-        PanelRow, 
-        RadioControl, 
-        RangeControl, 
-        ColorPalette, 
-        ColorPicker,    
-        ExternalLink,
-        Flex, 
-        FlexItem, 
-        FlexBlock,
-        Icon,
-        FontSizePicker,
-        TextControl,
-} from '@wordpress/components';
-
-import { useState } from '@wordpress/element';
-import {
-    more,
-    arrowLeft,
-    arrowRight,
-    arrowUp,
-    arrowDown,
-} from '@wordpress/icons';
+import { useBlockProps } from '@wordpress/block-editor';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -49,6 +20,14 @@ import {
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
+import { RichText, MediaUpload, InspectorControls } from '@wordpress/block-editor';
+import { 
+        IconButton, 
+        PanelBody, 
+        PanelRow, 
+        ColorPalette, 
+        ColorPicker,    
+} from '@wordpress/components';
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -59,7 +38,8 @@ import './editor.scss';
  */
 export default function Edit(props) {
 	let attributes = props.attributes;
-    let blockquote = attributes.blockquote;
+    let sliderArr = attributes.sliderArr;
+	//blockquote sliderArr
     function _toConsumableArray(arr) {
         if (Array.isArray(arr)) {
             for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
@@ -70,39 +50,17 @@ export default function Edit(props) {
             return Array.from(arr);
         }
     }
-    const fontSizes = [
-        {
-            name: __( 'Small' ),
-            slug: 'small',
-            size: 12,
-        },
-        {
-            name: __( 'Big' ),
-            slug: 'big',
-            size: 26,
-        },
-        {
-            name: __( 'Very Big' ),
-            slug: 'very-big',
-            size: 40,
-        }
-    ];
 
-    const fallbackFontSize = 48;
-    apiFetch( { path: '/wp/v2/posts' } ).then( posts => {
-        props.setAttributes( {posts_array : posts})
-    } );
-
-    console.log(attributes.posts_array);
-    let blockquoteList = blockquote.sort(function (a, b) {
+	let sliderList = sliderArr.sort(function (a, b) {
+		//blockquoteList sliderList
         return a.index - b.index;
     }).map(function (item) {
         return [
-            <div className='block-element'>
-                <div className='block-element-head'>
-                    <span>Block# {Number(item.index) +1 }</span>
-                    <IconButton icon='trash' className="block-element-add" onClick= {()=>{
-                            var newItem = blockquote.filter(function (element) {
+            <div className='slider-element'>
+                <div className='slider-head'>
+                    <span>Slide# {Number(item.index) +1 }</span>
+                    <IconButton icon='trash' className="slider-add" onClick= {()=>{
+                            var newItem = sliderArr.filter(function (element) {
                                 return element.index != item.index;
                             }).map(function (t) {
                                 if (t.index > item.index) {
@@ -110,8 +68,8 @@ export default function Edit(props) {
                                 }
                                 return t;
                             });
-                            props.setAttributes({blockquote: newItem});
-                        }} >Delete Block</IconButton> 
+                            props.setAttributes({sliderArr: newItem});
+                        }} >Delete Slide</IconButton> 
                 </div>  
                 <div>
                     <MediaUpload 
@@ -122,7 +80,7 @@ export default function Edit(props) {
                                     alt: media.alt
                                 });
                                 props.setAttributes({
-                                    blockquote: [].concat(_toConsumableArray(blockquote.filter(function (element) {
+                                    sliderArr: [].concat(_toConsumableArray(sliderArr.filter(function (element) {
                                         return element.index != item.index;
                                     })), [newObject])
                                 });
@@ -131,8 +89,8 @@ export default function Edit(props) {
                         render =  {(obj) =>{
                             return !!item.src ? <div> 
                                 <IconButton 
-                                    icon = 'trash'
-                                    className= 'block-element-add delete-element-block'
+                                    icon = 'no'
+                                    className= 'slider-add delete-slider'
                                     onClick = {() => {
                                         let newObject = Object.assign({}, item, {
                                             src: null,
@@ -140,19 +98,19 @@ export default function Edit(props) {
                                             alt: null
                                         });
                                         props.setAttributes({
-                                            blockquote: [].concat(_toConsumableArray(blockquote.filter(function (element) {
+                                            sliderArr: [].concat(_toConsumableArray(sliderArr.filter(function (element) {
                                                 return element.index != item.index;
                                             })), [newObject])
                                         });
-                                }}> Delete Media
+                                }}> 
                                 </IconButton>
                                 <img className='inner_image' src={item.src} onClick={obj.open} />  
                             </div> :
                             <div>
                                 <IconButton 
                                     icon = 'format-image'
-                                    className= 'block-element-add'
-                                    onClick = {obj.open}> 
+                                    className= 'slider-add'
+                                    onClick = {obj.open}> Add Slider Image
                                 </IconButton>
                             </div>
                         }}
@@ -169,13 +127,13 @@ export default function Edit(props) {
                                 inner_title: inner_title
                             });
                             props.setAttributes({
-                                blockquote: [].concat(_toConsumableArray(blockquote.filter(function (element) {
+                                sliderArr: [].concat(_toConsumableArray(sliderArr.filter(function (element) {
                                     return element.index != item.index;
                                 })), [newObject])
                             });
                         }}
                     />
-                    <RichText 
+                    {/* <RichText 
                         tagName = 'p'
                         placeholder = 'Enter Subtitle'
                         value = { item.inner_subtitle }
@@ -190,152 +148,65 @@ export default function Edit(props) {
                                 })), [newObject])
                             });
                         }}
-                    />
+                    /> */}
                     
                 </div>
             </div>
         ];
     });
-    let [ isChecked, setChecked ] = useState( false );
-    let new_val = 0;
-    attributes.inner_checkbox_ctrl == 1 ? [ isChecked, setChecked ] = useState(true) : [ isChecked, setChecked ] = useState( false );
-    const { show, option } = attributes;
-    return(
-    <>
-        <InspectorControls>
-                <PanelBody title='Extra class' initialOpen={true}>
-                    <PanelRow>
-                    Add another extra class?
-                    <FormToggle
-                        help={show ? 1 : 0}
-                        checked={show}
-                        onChange={() => props.setAttributes({ show: !show })}
-                    />
-                    </PanelRow>
-                    <PanelRow>
-                        Radiobox
-                        <RadioControl
-                            selected={ option }
-                            options={ [
-                                { label: 'Author', value: 'a' },
-                                { label: 'Editor', value: 'b' },
-                                { label: 'Viewer', value: 'c' },
-                            ] }
-                            onChange={ (option) => props.setAttributes({ option: option } ) }
-                        />
-                    </PanelRow>
-                </PanelBody>
-                <PanelBody title='Column Settings' initialOpen={false}>
-                    <PanelRow>
-                        <div>
-                            <CheckboxControl
-                                heading="Column Structure?"
-                                className= 'checkbox-block'
-                                checked={ isChecked }
-                                onClick={() => {
-                                    attributes.inner_checkbox_ctrl ==1 ? new_val=0 : new_val=1;
-                                    props.setAttributes({inner_checkbox_ctrl:new_val})
-                                }}
-                                onChange={setChecked}
-                            />
-                        </div>
-                    </PanelRow>
-                    <RangeControl 
-                        value= { attributes.column_count }
-                        onChange = { (column_count) => props.setAttributes( { column_count } ) }
-                        min = { 1 }
-                        max = { 4 }
-                        step = { 1 }
-                        />
-                </PanelBody>
-                {/* <PanelBody title="Dropdown"> */}
-                    {/* <DropdownMenu
-                        icon={ more }
-                        label="Select a direction"
-                        controls={ [
-                            {
-                                title: 'Up',
-                                icon: arrowUp,
-                                onClick: () => console.log( 'up' ),
-                            },
-                            {
-                                title: 'Right',
-                                icon: arrowRight,
-                                onClick: () => console.log( 'right' ),
-                            },
-                            {
-                                title: 'Down',
-                                icon: arrowDown,
-                                onClick: () => console.log( 'down' ),
-                            },
-                            {
-                                title: 'Left',
-                                icon: arrowLeft,
-                                onClick: () => console.log( 'left' ),
-                            },
-                        ] }
-                    /> */}
-                {/* </PanelBody> */}
-                <PanelBody title="Color Settings" initialOpen={false}>
-                    {/* <ColorPalette
-                        value = {props.font_color}
-                        onChange = { (font_color) => props.setAttributes({font_color}) }
-                    /> */}
-                    <ColorPicker
-                        value = {attributes.font_color}
-                        onChangeComplete = { (font_color) => props.setAttributes({font_color:font_color.hex}) }
-                    />
-                    {/* <ExternalLink href="https://wordpress.org">WordPress.org</ExternalLink> */}
-                </PanelBody>
-                <PanelBody title="Font Size Settings" initialOpen={false}>
-                    <p><strong>Title Font Size</strong></p>
-                    <FontSizePicker 
-                        fontSizes = { fontSizes }
-                        value = {attributes.font_size_title}
-                        onChange = { (font_size_title) => props.setAttributes( {font_size_title: font_size_title}) }
-                    />
-                    <p><strong>Subtitle Font Size</strong></p>
-                    <FontSizePicker 
-                        fontSizes = { fontSizes }
-                        fallbackFontSize = { fallbackFontSize }
-                        value = {attributes.font_size_sub_title}
-                        onChange = { (font_size_sub_title) => props.setAttributes( {font_size_sub_title: font_size_sub_title}) }
-                    />
-                    <TextControl
-                        type  = "number"
-                        min = {0}
-                        step = {0.1}
-                        width = {10}
-                        placeholder = {attributes.line_height}
-                        value = {attributes.line_height}
-                        onChange = { (line_height) => props.setAttributes( {line_height: line_height}) }
-                    />
-                </PanelBody>
-                <PanelBody>
-                   
-                </PanelBody>
-        </InspectorControls>
 
+	return [
+		<>
+		<InspectorControls>
+				<PanelBody title="Background Image Settings" initialOpen= { true }>
+					{/* <div class="media-container" style={{marginTop:'10px', marginBottom:'10px'} }>
+						<MediaUpload
+							onSelect = { (newImage) => setAttributes( {  backgroundImage: newImage.sizes.full.url } ) }
+							type = 'image'
+							value = { attributes.backgroundImage }
+							render={ ( { open } ) => (
+								<IconButton 
+									onClick={ open } 
+									icon="upload"
+									className= "components-button editor-post-publish-button editor-post-publish-button__button is-primary" >
+									Add
+								</IconButton>
+							) }
+						/>
+					</div> */}
+					{sliderList}
+                    <div className="slider-add-btn">
+                        <IconButton
+                            icon ='plus'
+                            className="slider-element-add"
+                            onClick = { ()=> {return props.setAttributes({
+                                sliderArr: [].concat(_toConsumableArray(attributes.sliderArr), [{
+                                    index: attributes.sliderArr.length,
+                                    inner_title:'',
+                                }])
+                            });}} >Add Slide
+                        </IconButton>
+				    </div>
+				</PanelBody>
+			</InspectorControls>
 
-        <div className="block-element-list">
-            <div className='block-element-listing'>
-             {blockquoteList}
-             </div>
-             <div className="block-add-btn">
-                 <IconButton
-                    icon ='plus'
-                    className="block-element-add"
-                    onClick = { ()=> {return props.setAttributes({
-                        blockquote: [].concat(_toConsumableArray(attributes.blockquote), [{
-                            index: attributes.blockquote.length,
-                            inner_title:'',
-                            inner_subtitle:'',
-                            in_rep_checkbox: '',
-                        }])
-                    });}} >Add Block
-                 </IconButton>
-             </div>
-        </div>
-    </>
-    )
+			<div className="slider-element-list">
+				<div className='slider-element-listing'>
+				{sliderList}
+				</div>
+				<div className="slider-add-btn">
+					<IconButton
+						icon ='plus'
+						className="slider-element-add"
+						onClick = { ()=> {return props.setAttributes({
+							sliderArr: [].concat(_toConsumableArray(attributes.sliderArr), [{
+								index: attributes.sliderArr.length,
+								inner_title:'',
+							}])
+						});}} >Add Slide
+					</IconButton>
+				</div>
+			</div>
+		</>
+	]
 }

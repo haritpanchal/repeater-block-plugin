@@ -6,13 +6,6 @@
 import { registerBlockType } from '@wordpress/blocks';
 
 /**
- * Retrieves the translation of text.
- *
- * @see https://developer.wordpress.org/block-editor/packages/packages-i18n/
- */
-import { __ } from '@wordpress/i18n';
-
-/**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * All files containing `style` keyword are bundled together. The code used
  * gets applied both to the front of your site and to the editor.
@@ -20,6 +13,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './style.scss';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
@@ -32,135 +26,51 @@ import save from './save';
  *
  * @see https://developer.wordpress.org/block-editor/developers/block-api/#registering-a-block
  */
-registerBlockType( 'create-block/repeater-block', {
+registerBlockType( 'create-block/wp-gutenbeg-slider', {
 	/**
-	 * @see https://make.wordpress.org/core/2020/11/18/block-api-version-2/
+	 * @see ./edit.js
 	 */
-	apiVersion: 2,
+	title: __( 'WP Gutenberg Slider', 'repeater-block' ),
 
-	/**
-	 * This is the display title for your block, which can be translated with `i18n` functions.
-	 * The block inserter will show this name.
-	 */
-	title: __( 'Repeater Block', 'repeater-block' ),
-
-	/**
-	 * This is a short description for your block, can be translated with `i18n` functions.
-	 * It will be shown in the Block Tab in the Settings Sidebar.
-	 */
-	description: __(
-		'Example block written with ESNext standard and JSX support – build step required.',
-		'repeater-block'
-	),
-
-	/**
-	 * Blocks are grouped into categories to help users browse and discover them.
-	 * The categories provided by core are `text`, `media`, `design`, `widgets`, and `embed`.
-	 */
-	category: 'widgets',
-
-	/**
-	 * An icon property should be specified to make it easier to identify a block.
-	 * These can be any of WordPress’ Dashicons, or a custom svg element.
-	 */
-	icon: 'smiley',
-
-	/**
-	 * Optional block extended support features.
-	 */
-	supports: {
-		// Removes support for an HTML mode.
-		html: false,
-	},
+	icon: 'slides',
 	attributes: {
-		blockquote: {
+		sliderArr: {
 			type: 'array',
 			source: 'query',
-			default: [{index: 0, inner_title: '', inner_subtitle:''}],
+			default: [{index: 0 }],
 			selector: '.block_item',
 			query: {
 				index: {
 					attribute: 'data-index',
 					source: 'attribute',
-					selector: 'img',
+					selector: '.slider_bg',
 				},
-				
 				inner_title: {
 					type: 'string',
 					source: 'html',
 					selector: '.block_inner--title'
 				},
-				inner_subtitle: {
-					type: 'string',
-					source: 'html',
-					selector: '.block_inner--subtitle'
-				},
-				external_link : {
-					type : 'string',
-					source : 'html',
-					selector : '.inner_external_link'
-				},
-				// in_rep_checkbox : {
-				// 	source : 'attribute',
-				// 	attribute: 'data-val',
-				// 	selector: 'input.in_rep_checkbox_ctrl'
+				// inner_subtitle: {
+				// 	type: 'string',
+				// 	source: 'html',
+				// 	selector: '.block_inner--subtitle'
 				// },
-				src: {attribute: 'src', source: 'attribute', selector: 'img'},
-				id: {attribute: 'data-id', source: 'attribute', selector: 'img'},
-				alt: {attribute: 'alt', source: 'attribute', selector: 'img'},
+				// external_link : {
+				// 	type : 'string',
+				// 	source : 'html',
+				// 	selector : '.inner_external_link'
+				// },
+				src: {attribute: 'src', source: 'attribute', selector: '.slider_bg'},
+				id: {attribute: 'data-id', source: 'attribute', selector: '.slider_bg'},
+				alt: {attribute: 'alt', source: 'attribute', selector: '.slider_bg'},
 			}
 		},
-		inner_checkbox_ctrl : {
-			source : 'attribute',
-			attribute: 'data-val',
-			selector: 'input.inner_checkbox_ctrl'
-		},
-		show:{
-			source : 'attribute',
-			attribute : 'data-toggle',
-			selector : 'input.inner_toggle_ctrl'
-		},
-		option: {
-			source : 'attribute',
-			attribute : 'data-radio',
-			selector : 'input.inner_radio_ctrl',
-			default : 'a',
-		},
-		column_count: {
-			type:'number',
-			default : 1,
-			selector : 'input.column_count'
-		},
-		font_color : {
-			type : 'string',
-			default : '#333',
-		},
-		font_size_title : {
-			type : 'number',
-		},
-		font_size_sub_title : {
-			type : 'number',
-		},
-		line_height : {
-			type : 'number',
-			default : 1.0
-		},
-		posts_array : {
-			type : 'array',
-			source: 'query',
-		}
+		
 	},
-
-	/**
-	 * @see ./edit.js
-	 */
 	edit: Edit,
 
 	/**
 	 * @see ./save.js
 	 */
 	save,
-	example: () => {
-	},
-
 } );

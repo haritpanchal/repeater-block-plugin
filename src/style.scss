@@ -5,35 +5,23 @@
  * Replace them with your own styles or remove the file completely.
  */
 
-.wp-block-create-block-repeater-block {
-	background-color: var(--wp-admin-theme-color);
+.wp-block-create-block-wp-gutenbeg-slider {
+	background-color: #21759b;
 	color: #fff;
 	padding: 2px;
 }
-.rep-block{
-	max-width: 80%!important;
-}
-.column_struct{
-	padding: 5%;
-	background-color: darksalmon;
-	display: flex;
-	flex-wrap: wrap;
-}
-.block_item{
-	padding: 0 20px;
-}
-.col-1 .block_item{
-	width: 100%;
-}
-.col-2 .block_item{
-	width: 50%;
-}
-.col-3 .block_item{
-	width: 33.33%;
-}
-.col-4 .block_item{
-	width: 25%;
-}
-.next{
-	border: 1px solid red;
-}
+/* The dots/bullets/indicators */
+.dot {
+	cursor: pointer;
+	height: 15px;
+	width: 15px;
+	margin: 0 2px;
+	background-color: #bbb;
+	border-radius: 50%;
+	display: inline-block;
+	transition: background-color 0.6s ease;
+  }
+  
+  .active, .dot:hover {
+	background-color: #717171;
+  }
